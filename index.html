@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>С любовью к тебе!
+    </title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 2s ease;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 40px;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            transition: all 0.5s ease;
+        }
+
+        .love-message {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 25px 0;
+            color: #555;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        /* Плавное появление текста */
+        .show-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .treasure-map {
+            position: relative;
+            padding: 40px;
+            margin: 20px 0;
+        }
+
+        .map-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .parchment-texture {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+        }
+
+        .map-steps {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+            position: relative;
+        }
+
+        .map-steps {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+    position: relative;
+    margin-left: 60px; /* Отступ для размещения точек и линий */
+}
+
+.map-steps li {
+    counter-increment: step;
+    margin: 40px 0; /* Увеличенное вертикальное расстояние для чёткости */
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    opacity: 1; /* Убираем анимацию исчезновения для стабильности */
+    transform: translateX(0);
+    position: relative;
+    min-height: 80px; /* Фиксированная высота для выравнивания */
+    display: flex;
+    align-items: center;
+}
+
+.step-icon {
+    font-size: 1.8em;
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+
+        /* Соединительные линии между шагами */
+.connection {
+    position: absolute;
+    left: -40px; /* Позиционируем относительно отступа списка */
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background: #d4af37;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+        /* Точки прогресса */
+.progress-dot {
+    position: absolute;
+    left: -50px; /* Совмещаем с линией */
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ccc;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.progress-dot.active {
+    background: #ffd700;
+    box-shadow: 0 0 10px #ffd700;
+}
+
+/* Убираем линию у последнего элемента */
+.map-steps li:last-child .connection {
+    display: none;
+}
+
+
+        .progress-dot.active {
+            background: #ffd700;
+            box-shadow: 0 0 10px #ffd700;
+        }
+
+        /* Активные шаги */
+        .map-steps .active {
+            background: #fff9f9;
+            border: 2px solid #ff6b6b;
+            transform: translateX(0) !important;
+            opacity: 1 !important;
+            box-shadow: 0 8px 25px rgba(255,107,107,0.2);
+        }
+
+        .current-reason {
+            font-size: 1.2em;
+            font-style: italic;
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff9f9;
+            border-left: 4px solid #ff6b6b;
+            text-align: left;
+            transition: opacity 0.3s;
+            display: block;
+            opacity: 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 15px 5px;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .map-btn {
+            background: linear-gradient(45deg, #4ecdc4, #4cb050);
+            color: white;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .music-btn {
+            background: linear-gradient(45deg, #9C27B0, #673AB7);
+            color: white;
+        }
+
+        .volume-control {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        #volume {
+            width: 200px;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #volume::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Анимация конфетти для финального шага */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Основной экран с признанием -->
+        <div id="mainScreen">
+            <div class="heart">❤️</div>
+            <h1>С любовью к тебе, <span id="loverName">любимая Кариша</span>!</h1>
+            <div class="love-message" id="mainMessage">
+                <p>Каждый день, проведённый с тобой, — это подарок судьбы.</p>
+                <p>Ты наполняешь мою жизнь светом, радостью и смыслом.</p>
+<p>Спасибо, что ты есть в моей жизни!</p>
+<p><strong>С любовью, <span id="yourName">твой Сережка</span></strong></p>
+</div>
+<button id="toMapBtn" class="btn map-btn">
+    🗺️ Перейти к карте сокровищ
+</button>
+</div>
+
+<!-- Экран карты сокровищ -->
+<div id="mapScreen" style="display: none;">
+    <h2>Карта сокровищ:<br>Путь в мое сердечко</h2>
+
+    <div class="treasure-map">
+        <div class="map-background">
+            <svg viewBox="0 0 600 400" class="parchment-texture">
+                <!-- Текстура пергамента -->
+                <rect width="600" height="400" fill="#f9f4d7" stroke="#d4af37" stroke-width="3" rx="15"/>
+                <!-- Декоративные элементы -->
+                <path d="M50 50 Q100 30 150 50 T250 50" stroke="#8b4513" stroke-width="2" fill="none"/>
+                <circle cx="550" cy="50" r="15" fill="none" stroke="#8b4513" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <h3>Этапы твоего пути:</h3>
+        <ol id="treasureSteps" class="map-steps">
+            <li class="active step-1">
+                <span class="step-icon">👥</span>
+                <div class="step-content">
+                    <strong>Старт:</strong> наша первая встреча
+                    <div class="progress-dot active"></div>
+            <div class="connection"></div>
+                </div>
+            </li>
+            <li class="step-2">
+                <span class="step-icon">😄</span>
+                <div class="step-content">
+            <strong>Поворот направо:</strong> твой первый смех
+            <div class="progress-dot"></div>
+            <div class="connection"></div>
+                </div>
+            </li>
+            <li class="step-3">
+                <span class="step-icon">💬</span>
+                <div class="step-content">
+            <strong>Через мост:</strong> твоё первое сообщение в тг«8.12.24»
+            <div class="progress-dot"></div>
+            <div class="connection"></div>
+                </div>
+            </li>
+            <li class="step-4">
+                <span class="step-icon">💭</span>
+                <div class="step-content">
+            <strong>Мимо озера:</strong> наши общие мечты
+            <div class="progress-dot"></div>
+            <div class="connection"></div>
+                </div>
+            </li>
+            <li class="step-5">
+                <span class="step-icon">❤️</span>
+                <div class="step-content">
+            <strong>Сокровище:</strong> ты в моей жизни навсегда!
+            <div class="progress-dot"></div>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="current-reason" id="loveMessage">
+        Я люблю тебя за то, что ты была рядом с самого начала общения!
+    </div>
+    <button id="nextReason" class="btn next-btn">Следующая причина →</button>
+    <button id="backToMain" class="btn back-btn">← Назад к признанию</button>
+</div>
+
+<!-- Фоновая музыка -->
+<audio id="backgroundMusic">
+    <source src="audio/background-music.mp3" type="audio/mpeg">
+    <source src="audio/background-music.ogg" type="audio/ogg">
+    Ваш браузер не поддерживает аудиоэлемент.
+</audio>
+
+
+<!-- Ползунок громкости -->
+<div class="volume-control">
+    <label for="volume">Громкость:</label>
+    <input type="range" id="volume" min="0" max="1" step="0.1" value="0.3">
+</div>
+
+<!-- Кнопка управления музыкой -->
+<button id="musicToggleBtn" class="btn music-btn">
+    🎵 Включить музыку
+</button>
+</div>
+<script>
+    // Элементы DOM
+    const music = document.getElementById('backgroundMusic');
+    const musicBtn = document.getElementById('musicToggleBtn');
+    const volumeSlider = document.getElementById('volume');
+    const nextBtn = document.getElementById('nextReason');
+    const messageElement = document.getElementById('loveMessage');
+    const steps = document.querySelectorAll('#treasureSteps li');
+    const toMapBtn = document.getElementById('toMapBtn');
+    const backToMainBtn = document.getElementById('backToMain');
+    const mainScreen = document.getElementById('mainScreen');
+    const mapScreen = document.getElementById('mapScreen');
+    const mainMessage = document.getElementById('mainMessage');
+
+    // Причины любви для каждого этапа
+    const reasons = [
+        "за то, что ты была рядом с самого начала общения",
+        "за твой чудесный смех",
+        "за твою искренность и поддержку",
+        "за наши общие мечты и планы",
+        "просто за то, что ты — это ты"
+    ];
+
+    let currentStep = 0;
+    let isMusicPlaying = false;
+
+    // Устанавливаем начальную громкость (10 %)
+    music.volume = 0.1;
+
+    // Обработчик изменения громкости
+    volumeSlider.addEventListener('input', function() {
+        music.volume = this.value;
+    });
+
+    // Обработчик кнопки управления музыкой
+    musicBtn.addEventListener('click', function() {
+        if (music.paused) {
+            music.play().then(() => {
+                musicBtn.textContent = '🎵 Выключить музыку';
+                isMusicPlaying = true;
+            }).catch(e => {
+                console.error("Воспроизведение заблокировано:", e);
+                alert("Не удалось воспроизвести музыку. Проверьте настройки браузера.");
+            });
+        } else {
+            music.pause();
+            musicBtn.textContent = '🎵 Включить музыку';
+            isMusicPlaying = false;
+        }
+    });
+
+    // Переход к карте сокровищ
+    toMapBtn.addEventListener('click', function() {
+        mainScreen.style.display = 'none';
+        mapScreen.style.display = 'block';
+
+        // Запускаем музыку при переходе к карте, если она не играет
+        if (!isMusicPlaying) {
+            music.play().catch(e => console.error("Автовоспроизведение заблокировано:", e));
+            musicBtn.textContent = '🎵 Выключить музыку';
+            isMusicPlaying = true;
+        }
+
+        // Показываем сообщение на карте
+        messageElement.style.opacity = '1';
+
+        // Плавное появление текста на основном экране
+        setTimeout(() => {
+            mainMessage.classList.add('show-text');
+        }, 500);
+    });
+
+    // Возврат к основному экрану
+    backToMainBtn.addEventListener('click', function() {
+        mapScreen.style.display = 'none';
+        mainScreen.style.display = 'block';
+        // Сбрасываем карту к первому шагу
+        steps.forEach(step => step.classList.remove('active'));
+        currentStep = 0;
+        steps[0].classList.add('active');
+        messageElement.textContent = `Я люблю тебя ${reasons[0]}`;
+        messageElement.style.opacity = '0';
+    });
+
+    // Обработчик кнопки «Следующая причина»
+    nextBtn.addEventListener('click', function() {
+        // Убираем активный класс с текущего шага
+        steps[currentStep].classList.remove('active');
+
+        // Переходим к следующему шагу (с циклом)
+        currentStep = (currentStep + 1) % steps.length;
+
+        // Добавляем активный класс новому шагу
+        steps[currentStep].classList.add('active');
+
+        // Обновляем сообщение с причиной любви
+        messageElement.textContent = `Я люблю тебя ${reasons[currentStep]}`;
+
+        // Визуальный эффект для сообщения
+        messageElement.style.opacity = '0';
+        setTimeout(() => {
+            messageElement.style.opacity = '1';
+        }, 100);
+
+                // Анимация конфетти при достижении финального шага
+        if (currentStep === 4) {
+            createConfetti();
+        }
+    });
+
+    // Функция создания конфетти
+    function createConfetti() {
+        const colors = ['#ff6b6b', '#4ecdc4', '#4cb050', '#ffd700', '#9b59b6', '#e74c3c'];
+        for (let i = 0; i < 70; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+
+            // Случайная позиция по горизонтали
+            confetti.style.left = Math.random() * 100 + 'vw';
+            // Случайный цвет
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            // Случайный размер
+            const size = Math.random() * 8 + 5;
+            confetti.style.width = size + 'px';
+            confetti.style.height = size + 'px';
+            // Случайная длительность анимации
+            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            // Случайное направление
+            confetti.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+
+            document.body.appendChild(confetti);
+
+            // Удаляем элемент после анимации
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+    }
+
+    // Автоматическое переключение шагов каждые 15 секунд (опционально)
+    let autoAdvance = setInterval(() => {
+        nextBtn.click();
+    }, 15000);
+
+    // Останавливаем автопрокрутку при клике пользователя
+    nextBtn.addEventListener('click', () => {
+        clearInterval(autoAdvance);
+        autoAdvance = setInterval(() => {
+            nextBtn.click();
+        }, 15000);
+    });
+
+    // Добавляем анимацию появления для шагов карты
+    steps.forEach((step, index) => {
+        step.style.animation = `slideIn 0.6s ease ${index * 0.3}s forwards`;
+    });
+
+    // Плавное появление основного текста при загрузке
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            mainMessage.classList.add('show-text');
+        }, 500);
+    });
+
+    // Принудительное воспроизведение при клике на любой элемент карты (обход блокировки автовоспроизведения)
+    document.addEventListener('click', function(e) {
+        // Воспроизводим только если ещё не играло и клик был не по кнопке музыки
+        if (!isMusicPlaying && e.target !== musicBtn) {
+            music.play().catch(() => {});
+        }
+    }, { once: true });
+</script>
+</body>
+</html>
+
+
+
+
